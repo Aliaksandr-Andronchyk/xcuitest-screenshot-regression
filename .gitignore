@@ -1,0 +1,6 @@
+.shots/
+build/
+__pycache__/
+*.pyc
+*.xcresult
+.DS_Store
