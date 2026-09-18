@@ -1,4 +1,5 @@
 shots/
+.shots/
 build/
 __pycache__/
 *.pyc
