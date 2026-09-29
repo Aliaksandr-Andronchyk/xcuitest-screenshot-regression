@@ -60,6 +60,14 @@ class Comparison(unittest.TestCase):
         self.assertEqual(changed, 0)
         self.assertEqual(counted, 90)
 
+    def test_fully_ignored_image_does_not_silently_pass(self):
+        base, actual = self._pair()
+        actual.set_pixel(3, 3, (0, 0, 0, 255))
+        policy = Policy(ignore=(Region(0, 0, 10, 10),))
+        (changed, counted, ratio, bounds), _ = compare_images(base, actual, policy)
+        self.assertEqual(counted, 0)
+        self.assertEqual(ratio, 1.0)
+
     def test_size_change_is_an_error(self):
         base = png.Image.blank(10, 10)
         with self.assertRaises(ValueError):
