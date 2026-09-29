@@ -141,7 +141,9 @@ def compare_images(baseline: png.Image, actual: png.Image, policy: Policy):
             diff_px[o + 2] = act_px[o + 2] // 3 + 170
             diff_px[o + 3] = 255
 
-    ratio = changed / counted if counted else 0.0
+    # counted == 0 means every pixel was ignored: treat as maximally
+    # suspicious instead of silently passing, there is nothing to vouch for.
+    ratio = changed / counted if counted else 1.0
     bounds = (min_x, min_y, max_x, max_y) if max_x >= 0 else None
     return (changed, counted, ratio, bounds), diff
 
