@@ -166,6 +166,21 @@ class Config(unittest.TestCase):
             self.assertEqual(paywall.ignore, (Region(0, 0, 5, 5),))
             self.assertEqual(suite.policy_for("other").max_diff_ratio, 0.0)
 
+    def test_per_shot_ignore_adds_to_default_ignore(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "c.json"
+            path.write_text(
+                '{"ignore": ["0,0,1170,140"], '
+                '"shots": {"paywall": {"ignore": ["0,1800,1170,120"]}}}',
+                encoding="utf-8",
+            )
+            suite = config.load(path)
+            paywall = suite.policy_for("paywall")
+            self.assertEqual(
+                set(paywall.ignore),
+                {Region(0, 0, 1170, 140), Region(0, 1800, 1170, 120)},
+            )
+
 
 class Demo(unittest.TestCase):
     def test_demo_catches_planted_regressions_and_ignores_the_clock(self):
