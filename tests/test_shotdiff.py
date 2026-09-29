@@ -137,6 +137,13 @@ class RunnerAndReport(unittest.TestCase):
             after = runner.run(baseline, actual, tmp / "diff", config.SuiteConfig())
             self.assertEqual({r.status for r in after} - {"missing"}, {"passed"})
 
+    def test_accept_with_unknown_name_in_only_raises_instead_of_silently_accepting_nothing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            baseline, actual = self._suite_dirs(tmp)
+            with self.assertRaises(ValueError):
+                runner.accept(actual, baseline, only=["typo-fresh"])
+
     def test_report_embeds_images_and_verdicts(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
