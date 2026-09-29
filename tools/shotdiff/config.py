@@ -42,7 +42,7 @@ def _policy(raw, base: Policy) -> Policy:
     return Policy(
         channel_tolerance=int(raw.get("channel_tolerance", base.channel_tolerance)),
         max_diff_ratio=float(raw.get("max_diff_ratio", base.max_diff_ratio)),
-        ignore=_regions(raw["ignore"]) if "ignore" in raw else base.ignore,
+        ignore=base.ignore + _regions(raw["ignore"]) if "ignore" in raw else base.ignore,
     )
 
 
