@@ -59,8 +59,13 @@ def accept(actual_dir, baseline_dir, only=None) -> List[str]:
     """Promote fresh shots to baselines. The only way baselines ever change."""
     baseline_dir = Path(baseline_dir)
     baseline_dir.mkdir(parents=True, exist_ok=True)
+    available = _names(Path(actual_dir))
+    if only:
+        unknown = sorted(set(only) - set(available))
+        if unknown:
+            raise ValueError("нет такого снимка в actual: %s" % ", ".join(unknown))
     accepted = []
-    for name, path in _names(Path(actual_dir)).items():
+    for name, path in available.items():
         if only and name not in only:
             continue
         shutil.copyfile(path, baseline_dir / ("%s.png" % name))
